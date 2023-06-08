@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Link Shortener</title>
+    <style>
+        body {
+            text-align: center;
+            padding-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+        
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Link Shortener</h1>
+    <form>
+        <input type="text" id="long-url" placeholder="Enter a long URL" required>
+        <br><br>
+        <input type="submit" value="Shorten URL" onclick="shortenURL()">
+    </form>
+    
+    <p id="short-url" style="display: none;"></p>
+
+    <script>
+        function shortenURL() {
+            var longURL = document.getElementById("long-url").value;
+            var request = new XMLHttpRequest();
+            request.open("POST", "https://your-api-endpoint.com/shorten", true);
+            request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            request.onload = function() {
+                if (request.status === 200) {
+                    var response = JSON.parse(request.responseText);
+                    var shortURL = response.short_url;
+                    document.getElementById("short-url").innerHTML = "<a href='" + shortURL + "' target='_blank'>" + shortURL + "</a>";
+                    document.getElementById("short-url").style.display = "block";
+                }
+            };
+            request.send(JSON.stringify({ long_url: longURL }));
+        }
+    </script>
+</body>
+</html>
